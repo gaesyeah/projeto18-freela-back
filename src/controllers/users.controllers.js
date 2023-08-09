@@ -27,8 +27,8 @@ export const signIn = async (req, res) => {
     if (!rightPassword) return res.status(401).send({ message: 'Incorrect password' });
 
     const token = uuid();
-    await insertSessions(token, rows[0].id);
-    res.status(200).send({ token });
+    const user = await insertSessions(token, rows[0].id);
+    res.status(200).send({ token, name: user.rows[0].name });
 
   } catch ({ detail }) {
     res.status(500).send(detail);
