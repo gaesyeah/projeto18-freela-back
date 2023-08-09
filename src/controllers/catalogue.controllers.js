@@ -19,7 +19,9 @@ export const getCatalogueByBreedNoUser = async (req, res) => {
   const { token } = req.query;
 
   try {
-    const { rows } = await selectCatalogueByBreedNoUser(parseInt(breedId), token);
+    const { rows, rowCount } = await selectCatalogueByBreedNoUser(parseInt(breedId), token);
+
+    if (rowCount === 0) res.sendStatus(404);
 
     res.send(rows);
   } catch ({ detail }) {
@@ -31,7 +33,9 @@ export const getCatalogueById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { rows } = await selectCatalogueById(parseInt(id));
+    const { rows, rowCount } = await selectCatalogueById(parseInt(id));
+
+    if (rowCount === 0) res.sendStatus(404);
 
     res.send(rows[0]);
   } catch ({ detail }) {
