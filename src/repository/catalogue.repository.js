@@ -21,7 +21,7 @@ export const insertPhotos = async (photos, catalogueId) => {
   return;
 };
 
-export const selectCatalogueByBreedNoUser = async (breedId, token) => {
+export const selectCatalogueByBreedNoUser = (breedId, token) => {
   return db.query(`
     SELECT 
       catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
@@ -44,7 +44,7 @@ export const selectCatalogueByBreedNoUser = async (breedId, token) => {
   ;`, [token, breedId]);
 };
 
-export const selectCatalogueById = async (id) => {
+export const selectCatalogueById = (id) => {
   return db.query(`
     SELECT 
       catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
@@ -58,6 +58,25 @@ export const selectCatalogueById = async (id) => {
       ON catalogue."breedId" = breeds.id 
       JOIN users 
       ON catalogue."userId" = users.id
+    WHERE catalogue.id = $1
+  ;`, [id]);
+};
+
+export const updateCatalogueById = async (id, token) => {
+  const { rowCount } = await db.query(`
+    SELECT *
+    FROM catalogue
+    WHERE id = $1 AND catalogue."userId" = (SELECT "userId" FROM sessions WHERE token = $2)
+  ;`, [id, token]);
+  if (rowCount === 0) return({ rowCount });
+
+  return db.query(`
+    UPDATE catalogue
+    SET avaliable = 
+      CASE
+        WHEN avaliable = true THEN false
+        ELSE true
+      END
     WHERE catalogue.id = $1
   ;`, [id]);
 }

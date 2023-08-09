@@ -1,4 +1,4 @@
-import { insertCatalogue, insertPhotos, selectCatalogueByBreedNoUser, selectCatalogueById } from "../repository/catalogue.repository.js";
+import { insertCatalogue, insertPhotos, selectCatalogueByBreedNoUser, selectCatalogueById, updateCatalogueById } from "../repository/catalogue.repository.js";
 
 export const postCatalogue = async (req, res) => {
   const { photos } = req.body;
@@ -42,3 +42,16 @@ export const getCatalogueById = async (req, res) => {
     res.status(500).send(detail);
   }
 };
+
+export const putCatalogueById = async (req, res) => {
+  const { authorization } = req.headers;
+  const { id } = req.params;
+  try {
+    const { rowCount } = await updateCatalogueById(id, authorization.replace('Bearer ', ''));
+    if (rowCount === 0) return res.status(400).send('Model not found, or you do not have authorization to change it');
+
+    res.sendStatus(204);
+  } catch ({ detail }) {
+    res.status(500).send(detail);
+  }
+}
