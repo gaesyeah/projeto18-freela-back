@@ -31,18 +31,24 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
       breeds.name AS "breedName",
       JSON_BUILD_OBJECT(
         'name', users.name,
-        'cellphone', users.cellphone
+        'cellphone', users.cellphone,
+        'imageUrl', users."imageUrl"
       ) AS "userData"
     FROM breeds
       JOIN catalogue 
       ON catalogue."breedId" = breeds.id 
       JOIN users 
       ON catalogue."userId" = users.id
-    WHERE 
-      catalogue."userId" != (SELECT "userId" FROM sessions WHERE token = $1) 
-        AND "breedId" = $2  
-      OR $1 IS NULL 
+      WHERE 
+      (
+        catalogue."userId" != (SELECT "userId" FROM sessions WHERE token = $1) 
         AND "breedId" = $2
+      )
+      OR 
+      (
+        $1 IS NULL 
+        AND "breedId" = $2
+      )
     GROUP BY catalogue.id, breeds.id, users.id
   ;`, [token, breedId]);
 };
@@ -54,7 +60,8 @@ export const selectCatalogueById = (id) => {
       breeds.name AS "breedName",
       JSON_BUILD_OBJECT(
         'name', users.name,
-        'cellphone', users.cellphone
+        'cellphone', users.cellphone,
+        'imageUrl', users."imageUrl"
       ) AS "userData"
     FROM breeds
       JOIN catalogue 
