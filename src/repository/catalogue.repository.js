@@ -29,6 +29,7 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
     SELECT 
       catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
       breeds.name AS "breedName",
+      (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId") AS "imageUrl",
       JSON_BUILD_OBJECT(
         'name', users.name,
         'cellphone', users.cellphone,
@@ -61,7 +62,7 @@ export const selectCatalogueByToken = (token) => {
         'id', catalogue.id,
         'title', catalogue.title,
         'description', catalogue.description,
-        'imageId', (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId")
+        'imageUrl', (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId")
       )) AS models
     FROM breeds
       JOIN catalogue
@@ -76,6 +77,7 @@ export const selectCatalogueById = (id) => {
     SELECT 
       catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
       breeds.name AS "breedName",
+      (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId") AS "imageUrl",
       JSON_BUILD_OBJECT(
         'name', users.name,
         'cellphone', users.cellphone,
