@@ -2,7 +2,7 @@ import { insertBreeds, selectBreeds } from "../repository/breeds.repository.js";
 
 export const postBreed = async (req, res) => {
   try {
-    await insertBreeds(req.body.name);
+    await insertBreeds(req.body);
     res.sendStatus(201);
   } catch ({ code, detail }) {
     if (code === "23505") return res.status(409).send({ message: detail });
