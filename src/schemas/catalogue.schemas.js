@@ -1,9 +1,5 @@
 import joi from 'joi';
 
-export const breedSchema = joi.object({
-  name: joi.string().required()
-});
-
 export const catalogueSchema = joi.object({
   title: joi.string().required(),
   description: joi.string().required(),

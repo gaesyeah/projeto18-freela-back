@@ -1,9 +1,5 @@
 import { db } from "../database/database.js";
 
-export const insertBreeds = (name) => {
-  return db.query('INSERT INTO breeds (name) VALUES ($1);', [name]);
-};
-
 export const insertCatalogue = (body) => {
   const { title, description, breedId, userId, mainPhotoId, avaliable } = body;
   return db.query(`
@@ -14,7 +10,7 @@ export const insertCatalogue = (body) => {
   );
 };
 
-export const insertPhotos = async(photos, catalogueId) => {
+export const insertPhotos = async (photos, catalogueId) => {
   photos.forEach(({ url }, i) => {
     if (i > 0) return db.query('INSERT INTO photos (url, "catalogueId") VALUES ($1, $2);', [url, catalogueId]);
   });
