@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import { insertSessions } from '../repository/sessions.repository.js';
-import { insertUsers, selectUsersByEmail } from '../repository/users.repository.js';
+import { deleteSessionByToken, insertUsers, selectUsersByEmail } from '../repository/users.repository.js';
 
 export const signUp = async (req, res) => {
   const { password, confirmPassword } = req.body;
@@ -30,6 +30,16 @@ export const signIn = async (req, res) => {
     const user = await insertSessions(token, rows[0].id);
     res.status(200).send({ token, name: user.rows[0].name });
 
+  } catch ({ detail }) {
+    res.status(500).send(detail);
+  }
+};
+
+export const signOut = async (req, res) => {
+  const { authorization } = req.headers;
+  try {
+    await deleteSessionByToken(authorization.replace('Bearer ', ''));
+    res.sendStatus(204);
   } catch ({ detail }) {
     res.status(500).send(detail);
   }

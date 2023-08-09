@@ -13,3 +13,7 @@ export const insertUsers = (body, password) => {
 export const selectUsersByEmail = (email) => {
   return db.query('SELECT id, password FROM users WHERE email = $1;', [email]);
 };
+
+export const deleteSessionByToken = (token) => {
+  return db.query('DELETE FROM sessions WHERE token = $1;', [token]);
+}
