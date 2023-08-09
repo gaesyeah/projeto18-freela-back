@@ -39,7 +39,7 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
       ON catalogue."breedId" = breeds.id 
       JOIN users 
       ON catalogue."userId" = users.id
-      WHERE 
+    WHERE 
       (
         catalogue."userId" != (SELECT "userId" FROM sessions WHERE token = $1) 
         AND "breedId" = $2
@@ -52,6 +52,24 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
     GROUP BY catalogue.id, breeds.id, users.id
   ;`, [token, breedId]);
 };
+
+export const selectCatalogueByToken = (token) => {
+  return db.query(`
+    SELECT 
+      breeds.name as "breedName",
+      JSON_AGG(JSON_BUILD_OBJECT(
+        'id', catalogue.id,
+        'title', catalogue.title,
+        'description', catalogue.description,
+        'imageId', (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId")
+      )) AS models
+    FROM breeds
+      JOIN catalogue
+      ON catalogue."breedId" = breeds.id
+    WHERE catalogue."userId" = (SELECT "userId" FROM sessions WHERE token = $1)
+    GROUP BY breeds.id
+    ;`, [token]);
+}
 
 export const selectCatalogueById = (id) => {
   return db.query(`
