@@ -21,7 +21,7 @@ export const getCatalogueByBreedNoUser = async (req, res) => {
   try {
     const { rows, rowCount } = await selectCatalogueByBreedNoUser(parseInt(breedId), token);
 
-    if (rowCount === 0) res.sendStatus(404);
+    if (rowCount === 0) return res.sendStatus(404);
 
     res.send(rows);
   } catch ({ detail }) {
