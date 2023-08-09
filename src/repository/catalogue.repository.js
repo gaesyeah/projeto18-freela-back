@@ -42,4 +42,22 @@ export const selectCatalogueByBreedNoUser = async (breedId, token) => {
         AND "breedId" = $2
     GROUP BY catalogue.id, breeds.id, users.id
   ;`, [token, breedId]);
+};
+
+export const selectCatalogueById = async (id) => {
+  return db.query(`
+    SELECT 
+      catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
+      breeds.name AS "breedName",
+      JSON_BUILD_OBJECT(
+        'name', users.name,
+        'cellphone', users.cellphone
+      ) AS "userData"
+    FROM breeds
+      JOIN catalogue 
+      ON catalogue."breedId" = breeds.id 
+      JOIN users 
+      ON catalogue."userId" = users.id
+    WHERE catalogue.id = $1
+  ;`, [id]);
 }

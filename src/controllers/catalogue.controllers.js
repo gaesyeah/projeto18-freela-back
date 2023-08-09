@@ -1,4 +1,4 @@
-import { insertCatalogue, insertPhotos, selectCatalogueByBreedNoUser } from "../repository/catalogue.repository.js";
+import { insertCatalogue, insertPhotos, selectCatalogueByBreedNoUser, selectCatalogueById } from "../repository/catalogue.repository.js";
 
 export const postCatalogue = async (req, res) => {
   const { photos } = req.body;
@@ -25,4 +25,16 @@ export const getCatalogueByBreedNoUser = async (req, res) => {
   } catch ({ detail }) {
     res.status(500).send(detail);
   }
-}
+};
+
+export const getCatalogueById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { rows } = await selectCatalogueById(parseInt(id));
+
+    res.send(rows[0]);
+  } catch ({ detail }) {
+    res.status(500).send(detail);
+  }
+};
