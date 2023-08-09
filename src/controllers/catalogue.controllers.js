@@ -2,8 +2,10 @@ import { insertCatalogue, insertPhotos, selectCatalogueByBreedNoUser, selectCata
 
 export const postCatalogue = async (req, res) => {
   const { photos } = req.body;
+  const { authorization } = req.headers;
+  console.log(authorization);
   try {
-    const { rows } = await insertCatalogue(req.body);
+    const { rows } = await insertCatalogue(req.body, authorization.replace('Bearer ', ''));
 
     await insertPhotos(photos, rows[0].id);
 

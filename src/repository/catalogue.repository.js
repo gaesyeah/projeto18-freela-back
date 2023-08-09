@@ -1,12 +1,15 @@
 import { db } from "../database/database.js";
 
-export const insertCatalogue = (body) => {
-  const { title, description, breedId, userId, mainPhotoId, avaliable } = body;
+export const insertCatalogue = async (body, token) => {
+  const { title, description, breedId, mainPhotoId, avaliable } = body;
+
+  const { rows } = await db.query('SELECT sessions."userId" FROM sessions WHERE token = $1;', [token]);
+
   return db.query(`
     INSERT INTO catalogue (title, description, "breedId", "userId", "mainPhotoId", avaliable) 
     VALUES ($1, $2, $3, $4, $5, $6) 
     RETURNING id
-    ;`, [title, description, breedId, userId, mainPhotoId, avaliable]
+    ;`, [title, description, breedId, rows[0].userId, mainPhotoId, avaliable]
   );
 };
 
