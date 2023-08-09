@@ -12,8 +12,8 @@ export const signUp = async (req, res) => {
     res.sendStatus(201);
 
   } catch ({ code, detail }) {
-    if (code === "23505") return res.status(409).send(detail);
-    res.status(500).send(detail);
+    if (code === "23505") return res.status(409).send({ message: detail });
+    res.status(500).send({ message: detail });
   }
 };
 
@@ -31,7 +31,7 @@ export const signIn = async (req, res) => {
     res.status(200).send({ token, name: user.rows[0].name });
 
   } catch ({ detail }) {
-    res.status(500).send(detail);
+    res.status(500).send({ message: detail });
   }
 };
 
@@ -41,6 +41,6 @@ export const signOut = async (req, res) => {
     await deleteSessionByToken(authorization.replace('Bearer ', ''));
     res.sendStatus(204);
   } catch ({ detail }) {
-    res.status(500).send(detail);
+    res.status(500).send({ message: detail });
   }
 }

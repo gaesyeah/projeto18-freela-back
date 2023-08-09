@@ -10,8 +10,8 @@ export const postCatalogue = async (req, res) => {
 
     res.sendStatus(201);
   } catch ({ code, detail }) {
-    if (code === "23503") return res.status(404).send(detail);
-    res.status(500).send(detail);
+    if (code === "23503") return res.status(404).send({ message: detail });
+    res.status(500).send({ message: detail });
   }
 };
 
@@ -25,7 +25,7 @@ export const getCatalogueByBreedNoUser = async (req, res) => {
 
     res.send(rows);
   } catch ({ detail }) {
-    res.status(500).send(detail);
+    res.status(500).send({ message: detail });
   }
 };
 
@@ -35,7 +35,7 @@ export const getCatalogueByToken =  async (req, res) => {
     const { rows } = await selectCatalogueByToken(authorization.replace('Bearer ', ''));
     res.send(rows);
   } catch ({ detail }) {
-    res.status(500).send(detail);
+    res.status(500).send({ message: detail });
   }
 };
 
@@ -49,7 +49,7 @@ export const getCatalogueById = async (req, res) => {
 
     res.send(rows[0]);
   } catch ({ detail }) {
-    res.status(500).send(detail);
+    res.status(500).send({ message: detail });
   }
 };
 
@@ -62,6 +62,6 @@ export const putCatalogueById = async (req, res) => {
 
     res.sendStatus(204);
   } catch ({ detail }) {
-    res.status(500).send(detail);
+    res.status(500).send({ message: detail });
   }
 }
