@@ -20,3 +20,26 @@ export const insertPhotos = async (photos, catalogueId) => {
 
   return;
 };
+
+export const selectCatalogueByBreedNoUser = async (breedId, token) => {
+  return db.query(`
+    SELECT 
+      catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
+      breeds.name AS "breedName",
+      JSON_BUILD_OBJECT(
+        'name', users.name,
+        'cellphone', users.cellphone
+      ) AS "userData"
+    FROM breeds
+      JOIN catalogue 
+      ON catalogue."breedId" = breeds.id 
+      JOIN users 
+      ON catalogue."userId" = users.id
+    WHERE 
+      catalogue."userId" != (SELECT "userId" FROM sessions WHERE token = $1) 
+        AND "breedId" = $2  
+      OR $1 IS NULL 
+        AND "breedId" = $2
+    GROUP BY catalogue.id, breeds.id, users.id
+  ;`, [token, breedId]);
+}
