@@ -4,11 +4,11 @@ import { insertSessions } from '../repository/sessions.repository.js';
 import { insertUsers, selectUsersByEmail } from '../repository/users.repository.js';
 
 export const signUp = async (req, res) => {
-  const { name, email, cellphone, cpf, password, confirmPassword } = req.body;
+  const { password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) return res.status(422).send({ message: 'The passwords do not match' });
   try{
-    await insertUsers(name, email, cellphone, cpf, bcrypt.hashSync(password, 10));
+    await insertUsers(req.body, bcrypt.hashSync(password, 10));
     res.sendStatus(201);
 
   } catch ({ code, detail }) {
