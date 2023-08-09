@@ -1,7 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import './database/database.js';
+/* import './database/database.js'; */
 import indexRouter from './routes/index.routes.js';
 
 const app = express();
