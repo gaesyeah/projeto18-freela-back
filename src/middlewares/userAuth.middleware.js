@@ -3,7 +3,7 @@ import { selectSessionByToken } from '../repository/sessions.repository.js';
 export const userAuth = async (req, res, next) => {
   const { authorization } = req.headers;
 
-  const token = authorization.replace('Bearer ', '');
+  const token = authorization?.replace('Bearer ', '');
   if (!authorization || token === 'Bearer') return res.status(401).send({ message: 'Invalid token' });
 
   try{
