@@ -49,7 +49,7 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
 export const selectCatalogueByToken = (token) => {
   return db.query(`
     SELECT 
-      breeds.name as "breedName",
+      breeds.id, breeds.name as "breedName",
       JSON_AGG(JSON_BUILD_OBJECT(
         'id', catalogue.id,
         'title', catalogue.title,
