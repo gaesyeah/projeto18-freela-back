@@ -27,19 +27,11 @@ export const insertPhotos = async (photos, catalogueId) => {
 export const selectCatalogueByBreedNoUser = (breedId, token) => {
   return db.query(`
     SELECT 
-      catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
-      breeds.name AS "breedName",
-      (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId") AS "imageUrl",
-      JSON_BUILD_OBJECT(
-        'name', users.name,
-        'cellphone', users.cellphone,
-        'imageUrl', users."imageUrl"
-      ) AS "userData"
+      catalogue.id, catalogue.title, catalogue.avaliable, 
+      (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId") AS "imageUrl"
     FROM breeds
       JOIN catalogue 
       ON catalogue."breedId" = breeds.id 
-      JOIN users 
-      ON catalogue."userId" = users.id
     WHERE 
       (
         catalogue."userId" != (SELECT "userId" FROM sessions WHERE token = $1) 
@@ -50,7 +42,7 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
         $1 IS NULL 
         AND "breedId" = $2
       )
-    GROUP BY catalogue.id, breeds.id, users.id
+    GROUP BY catalogue.id, breeds.id
   ;`, [token, breedId]);
 };
 
