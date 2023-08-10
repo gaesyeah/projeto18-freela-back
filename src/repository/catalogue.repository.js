@@ -53,7 +53,7 @@ export const selectCatalogueByToken = (token) => {
       JSON_AGG(JSON_BUILD_OBJECT(
         'id', catalogue.id,
         'title', catalogue.title,
-        'description', catalogue.description,
+        'avaliable', catalogue.avaliable,
         'imageUrl', (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId")
       )) AS models
     FROM breeds
