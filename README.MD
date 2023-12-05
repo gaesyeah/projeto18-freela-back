@@ -8,7 +8,7 @@
 
 ## Como funciona?
 
-Este projeto é uma API REST para atender a aplicação da MiauAuAu, aplicação onde tutores de diversos animais possam cadastra-los para oferecer seus serviços de modelo para que qualquer pessoa possa contata-la e contratar seu serviço.
+Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores de diversos animais(pets ou não) podem cadastra-los para oferecer seus serviços de modelo(sim! seu animalzinho agora pode ser um astro!) para que qualquer pessoa possa contata-la e contratar seu serviço.
 
 ## Rotas:
 
