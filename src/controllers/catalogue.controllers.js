@@ -68,7 +68,7 @@ export const getCatalogueById = async (req, res) => {
   }
 };
 
-export const putCatalogueById = async (req, res) => {
+export const patchCatalogueById = async (req, res) => {
   const { authorization } = req.headers;
   const { id } = req.params;
   try {

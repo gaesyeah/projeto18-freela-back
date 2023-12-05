@@ -26,7 +26,7 @@ CREATE TABLE catalogue (
 	description TEXT NOT NULL,
 	"breedId" INT NOT NULL,
 	"userId" INT NOT NULL,
-    "mainPhotoId" INT,
+  "mainPhotoId" INT,
 	avaliable BOOLEAN NOT NULL DEFAULT true,
 	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -48,8 +48,8 @@ CREATE TABLE breeds (
 CREATE TABLE likes (
 	id SERIAL PRIMARY KEY,
 	"userId" INT NOT NULL,
-    "catalogueId" INT NOT NULL,
-    UNIQUE("userId", "catalogueId"),
+  "catalogueId" INT NOT NULL,
+  UNIQUE("userId", "catalogueId"),
 	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

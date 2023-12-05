@@ -31,6 +31,7 @@ export const insertPhotos = async (photos, catalogueId) => {
     [photos[0].url, catalogueId]
   );
 
+  //por enquanto a foto principal sempre vai ser a primeira do array
   db.query('UPDATE catalogue SET "mainPhotoId" = $1 WHERE id = $2;', [
     rows[0].id,
     catalogueId,

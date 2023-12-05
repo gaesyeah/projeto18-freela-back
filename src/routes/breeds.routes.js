@@ -5,7 +5,7 @@ import { breedSchema } from "../schemas/breeds.schemas.js";
 
 const breedRouter = Router();
 
-breedRouter.post("/postBreed", schemaValidation(breedSchema), postBreed);
-breedRouter.get("/getBreeds", getBreeds);
+breedRouter.post("/", schemaValidation(breedSchema), postBreed);
+breedRouter.get("/", getBreeds);
 
 export default breedRouter;
