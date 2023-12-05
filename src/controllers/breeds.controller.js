@@ -17,4 +17,4 @@ export const getBreeds = async (req, res) => {
   } catch ({ detail }) {
     res.status(500).send({ message: detail });
   }
-}
+};

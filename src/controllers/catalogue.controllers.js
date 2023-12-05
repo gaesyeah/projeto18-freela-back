@@ -1,10 +1,20 @@
-import { insertCatalogue, insertPhotos, selectCatalogueByBreedNoUser, selectCatalogueById, selectCatalogueByToken, updateCatalogueById } from "../repository/catalogue.repository.js";
+import {
+  insertCatalogue,
+  insertPhotos,
+  selectCatalogueByBreedNoUser,
+  selectCatalogueById,
+  selectCatalogueByToken,
+  updateCatalogueById,
+} from "../repository/catalogue.repository.js";
 
 export const postCatalogue = async (req, res) => {
   const { photos } = req.body;
   const { authorization } = req.headers;
   try {
-    const { rows } = await insertCatalogue(req.body, authorization.replace('Bearer ', ''));
+    const { rows } = await insertCatalogue(
+      req.body,
+      authorization.replace("Bearer ", "")
+    );
 
     await insertPhotos(photos, rows[0].id);
 
@@ -19,7 +29,10 @@ export const getCatalogueByBreedNoUser = async (req, res) => {
   const { breedId } = req.params;
   const { token } = req.query;
   try {
-    const { rows, rowCount } = await selectCatalogueByBreedNoUser(parseInt(breedId), token);
+    const { rows, rowCount } = await selectCatalogueByBreedNoUser(
+      parseInt(breedId),
+      token
+    );
 
     if (rowCount === 0) return res.sendStatus(404);
 
@@ -29,10 +42,12 @@ export const getCatalogueByBreedNoUser = async (req, res) => {
   }
 };
 
-export const getCatalogueByToken =  async (req, res) => {
+export const getCatalogueByToken = async (req, res) => {
   const { authorization } = req.headers;
   try {
-    const { rows } = await selectCatalogueByToken(authorization.replace('Bearer ', ''));
+    const { rows } = await selectCatalogueByToken(
+      authorization.replace("Bearer ", "")
+    );
     res.send(rows);
   } catch ({ detail }) {
     res.status(500).send({ message: detail });
@@ -57,11 +72,17 @@ export const putCatalogueById = async (req, res) => {
   const { authorization } = req.headers;
   const { id } = req.params;
   try {
-    const { rowCount } = await updateCatalogueById(id, authorization.replace('Bearer ', ''));
-    if (rowCount === 0) return res.status(400).send('Model not found, or you do not have authorization to change it');
+    const { rowCount } = await updateCatalogueById(
+      id,
+      authorization.replace("Bearer ", "")
+    );
+    if (rowCount === 0)
+      return res
+        .status(400)
+        .send("Model not found, or you do not have authorization to change it");
 
     res.sendStatus(204);
   } catch ({ detail }) {
     res.status(500).send({ message: detail });
   }
-}
+};
