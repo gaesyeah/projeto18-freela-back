@@ -57,7 +57,7 @@ Este projeto é uma API REST para atender a aplicação da MiauAuAu, aplicação
   "description": string",
   "avaliable": boolean,
   "breedId": number,
-  "mainPhotoId": **"opcional, mas por enquanto não foi implementado: atualmente a foto principal sempre é a primeira do array de fotos"**
+  "arrayPhotoPosition": **"posição no array da foto que o tutor deseja usar como foto principal do seu modelo, caso não exista será a primeira"**
   "photos": [
   {
   "url": string

@@ -1,7 +1,7 @@
 import { db } from "../database/database.js";
 
 export const insertCatalogue = async (body, token) => {
-  const { title, description, breedId, mainPhotoId, avaliable } = body;
+  const { title, description, breedId, avaliable } = body;
 
   const { rows } = await db.query(
     'SELECT sessions."userId" FROM sessions WHERE token = $1;',
@@ -10,34 +10,32 @@ export const insertCatalogue = async (body, token) => {
 
   return db.query(
     `
-    INSERT INTO catalogue (title, description, "breedId", "userId", "mainPhotoId", avaliable) 
+    INSERT INTO catalogue (title, description, "breedId", "userId", avaliable, "mainPhotoId") 
     VALUES ($1, $2, $3, $4, $5, $6) 
     RETURNING id
     ;`,
-    [title, description, breedId, rows[0].userId, mainPhotoId, avaliable]
+    [title, description, breedId, rows[0].userId, avaliable, null]
   );
 };
 
-export const insertPhotos = async (photos, catalogueId) => {
-  photos.forEach(({ url }, i) => {
-    if (i > 0)
-      return db.query(
-        'INSERT INTO photos (url, "catalogueId") VALUES ($1, $2);',
-        [url, catalogueId]
-      );
-  });
-  const { rows } = await db.query(
-    'INSERT INTO photos (url, "catalogueId") VALUES ($1, $2) RETURNING id;',
-    [photos[0].url, catalogueId]
+export const insertPhotos = async (photos, catalogueId, arrayPhotoPosition) => {
+  const values = photos
+    .map((_, i) => `($${i + 1}, $${photos.length + 1})`)
+    .join(", ");
+  const { rows, rowCount } = await db.query(
+    `INSERT INTO photos (url, "catalogueId") VALUES ${values} RETURNING id;`,
+    [...photos.map(({ url }) => url), catalogueId]
   );
 
-  //por enquanto a foto principal sempre vai ser a primeira do array
-  db.query('UPDATE catalogue SET "mainPhotoId" = $1 WHERE id = $2;', [
-    rows[0].id,
-    catalogueId,
-  ]);
+  const mainPhotoId = rows.some((_, i) => i === arrayPhotoPosition)
+    ? rows[arrayPhotoPosition].id
+    : rows[0].id;
+  const update = await db.query(
+    'UPDATE catalogue SET "mainPhotoId" = $1 WHERE id = $2;',
+    [mainPhotoId, catalogueId]
+  );
 
-  return;
+  return { insert: { rows, rowCount }, update: { rowCount: update.rowCount } };
 };
 
 export const selectCatalogueByBreedNoUser = (breedId, token) => {
