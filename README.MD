@@ -1,14 +1,20 @@
 # MiauAuAu (Back-End)
 
+## Como funciona?
+
+Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores de diversos animais(pets ou não) podem cadastra-los para oferecer seus serviços de modelo(sim! seu animalzinho agora pode ser um astro!) para que qualquer pessoa possa contata-la e contratar seu serviço.
+
+## Deploy:
+
+**https://freeladb.onrender.com**
+
+**OBS:** Atualmente o deploy do banco está suspenso
+
 ## Como rodar localmente?
 
 - Ter o Node e Postgres instalados
 - Renomear o arquivo .env.example para .env (ou criar um)
 - Rodar os comandos: **npm run start-db** && **npm run dev**
-
-## Como funciona?
-
-Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores de diversos animais(pets ou não) podem cadastra-los para oferecer seus serviços de modelo(sim! seu animalzinho agora pode ser um astro!) para que qualquer pessoa possa contata-la e contratar seu serviço.
 
 ## Rotas:
 
@@ -88,12 +94,6 @@ body = {
 - GET `/catalogue/unique/:id`: **retorna um único modelo e os dados de contato de seu tutor**
 
 Cada uma das rotas contemplam as convenções de respostas para APIs REST.
-
-## Deploy:
-
-**https://freeladb.onrender.com**
-
-**OBS:** Atualmente o deploy do banco está suspenso
 
 ## Tecnologias utilizadas:
 
