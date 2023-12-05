@@ -4,7 +4,7 @@ export const catalogueSchema = joi.object({
   title: joi.string().required(),
   description: joi.string().required(),
   breedId: joi.number().integer().required(),
-  arrayPhotoPosition: joi.number().integer(),
+  mainPhotoPositionFromPhotosArray: joi.number().integer(),
   avaliable: joi.boolean().required(),
   photos: joi
     .array()

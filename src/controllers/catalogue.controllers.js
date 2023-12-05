@@ -16,7 +16,11 @@ export const postCatalogue = async (req, res) => {
       authorization.replace("Bearer ", "")
     );
 
-    await insertPhotos(photos, rows[0].id, req.body.arrayPhotoPosition);
+    await insertPhotos(
+      photos,
+      rows[0].id,
+      req.body.mainPhotoPositionFromPhotosArray
+    );
 
     res.sendStatus(201);
   } catch ({ code, detail }) {

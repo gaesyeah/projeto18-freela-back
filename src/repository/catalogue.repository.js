@@ -18,7 +18,11 @@ export const insertCatalogue = async (body, token) => {
   );
 };
 
-export const insertPhotos = async (photos, catalogueId, arrayPhotoPosition) => {
+export const insertPhotos = async (
+  photos,
+  catalogueId,
+  mainPhotoPositionFromPhotosArray
+) => {
   const values = photos
     .map((_, i) => `($${i + 1}, $${photos.length + 1})`)
     .join(", ");
@@ -27,8 +31,10 @@ export const insertPhotos = async (photos, catalogueId, arrayPhotoPosition) => {
     [...photos.map(({ url }) => url), catalogueId]
   );
 
-  const mainPhotoId = rows.some((_, i) => i === arrayPhotoPosition)
-    ? rows[arrayPhotoPosition].id
+  const mainPhotoId = rows.some(
+    (_, i) => i === mainPhotoPositionFromPhotosArray
+  )
+    ? rows[mainPhotoPositionFromPhotosArray].id
     : rows[0].id;
   const update = await db.query(
     'UPDATE catalogue SET "mainPhotoId" = $1 WHERE id = $2;',

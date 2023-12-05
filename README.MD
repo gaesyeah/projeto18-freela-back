@@ -12,11 +12,12 @@ Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores d
 
 ## Rotas:
 
-`user`:
+**`user`**:
 
 - POST `/user/sign-up`: **cria um usuário**
 
-  **body** = {
+```json
+body = {
   "name": string,
   "email": string,
   "imageUrl": string,
@@ -24,60 +25,67 @@ Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores d
   "cpf": string,
   "password": string,
   "confirmPassword": string
-  }
+}
+```
 
 - POST `/user/sign-on`: **loga com o usuário**
 
-  **body** = {
+```json
+body = {
   "email": string,
   "password": number
-  }
+}
+```
 
 - POST `/user/sign-out`: **desloga o usuário**
 
-  **header/auth** = "Bearer token"
+  (_necessita de Bearer token_)
 
-`breed`:
+**`breed`**:
 
 - POST `/breed`: **insere uma raça**
 
-  **body** = {
+```json
+body = {
   "name": string,
   "imageUrl": string
-  }
+}
+```
 
 - GET `/breed`: **busca todas as raças**
 
-`catalogue`:
+**`catalogue`**:
 
 - POST `/catalogue`: **insere um pet modelo**
 
-  **body** = {
+  (_necessita de Bearer token_)
+
+```json
+body = {
   "title": string,
-  "description": string",
+  "description": string,
   "avaliable": boolean,
   "breedId": number,
-  "arrayPhotoPosition": **"posição no array da foto que o tutor deseja usar como foto principal do seu modelo, caso não exista será a primeira"**
+  "mainPhotoPositionFromPhotosArray": number,
   "photos": [
-  {
-  "url": string
-  }
+    {
+      "url": string
+    }
   ]
-  }
-
-  **header/auth** = "Bearer token"
-
-- GET `/catalogue/mine`: **busca todos os modelos do usuário, separados por raça**
-
-  **header/auth** = "Bearer token"
-
-- GET `/catalogue/breed/:breedId`: **retorna todos os modelos de acordo com a raça**
-
-- GET `/catalogue/unique/:id`: **retorna um único modelo e os dados de seu tutor**
+}
+```
 
 - PATCH `/catalogue/vacation/:id`: **altera o estado de ferias do modelo**
 
-  **header/auth** = "Bearer token"
+  (_necessita de Bearer token_)
+
+- GET `/catalogue/mine`: **busca todos os modelos do usuário, separados por raça**
+
+  (_necessita de Bearer token_)
+
+- GET `/catalogue/breed/:breedId`: **retorna todos os modelos de acordo com a raça**
+
+- GET `/catalogue/unique/:id`: **retorna um único modelo e os dados de contato de seu tutor**
 
 Cada uma das rotas contemplam as convenções de respostas para APIs REST.
 
