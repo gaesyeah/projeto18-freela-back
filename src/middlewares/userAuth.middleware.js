@@ -1,19 +1,15 @@
-import { selectSessionByToken } from "../repository/sessions.repository.js";
+import { error } from "../errors/errors.js";
+import { sessionsRepository } from "../repository/sessions.repository.js";
 
-export const userAuth = async (req, res, next) => {
+export const userAuth = async (req, _res, next) => {
   const { authorization } = req.headers;
 
   const token = authorization?.replace("Bearer ", "");
   if (!authorization || token === "Bearer")
-    return res.status(401).send({ message: "Invalid token" });
+    throw error.unauthorized("Invalid token");
 
-  try {
-    const { rowCount } = await selectSessionByToken(token);
-    if (rowCount === 0)
-      return res.status(401).send({ message: "Session not found" });
+  const { rowCount } = await sessionsRepository.selectSessionByToken(token);
+  if (rowCount === 0) throw error.unauthorized("Session not found");
 
-    next();
-  } catch ({ message }) {
-    res.status(500).send(message);
-  }
+  next();
 };

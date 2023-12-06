@@ -1,6 +1,6 @@
 import { db } from "../database/database.js";
 
-export const insertUsers = (body, password) => {
+const insertUsers = (body, password) => {
   const { name, email, cellphone, cpf, imageUrl } = body;
   return db.query(
     `
@@ -12,10 +12,8 @@ export const insertUsers = (body, password) => {
   );
 };
 
-export const selectUsersByEmail = (email) => {
+const selectUsersByEmail = (email) => {
   return db.query(`SELECT id, password FROM users WHERE email = $1;`, [email]);
 };
 
-export const deleteSessionByToken = (token) => {
-  return db.query("DELETE FROM sessions WHERE token = $1;", [token]);
-};
+export const usersRepository = { insertUsers, selectUsersByEmail };

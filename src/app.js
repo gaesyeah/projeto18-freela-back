@@ -1,10 +1,11 @@
+import "express-async-errors";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import express from "express";
-/* import './database/database.js'; */
 import catalogueRouter from "./routes/catalogue.routes.js";
 import breedRouter from "./routes/breeds.routes.js";
 import userRouter from "./routes/users.routes.js";
+import { errorHandling } from "./middlewares/errorHandling.middleware.js";
 
 const app = express();
 app
@@ -12,7 +13,8 @@ app
   .get("/health", (_req, res) => res.send("OK!"))
   .use("/catalogue", catalogueRouter)
   .use("/breed", breedRouter)
-  .use("/user", userRouter);
+  .use("/user", userRouter)
+  .use(errorHandling);
 
 dotenv.config();
 const { PORT } = process.env;

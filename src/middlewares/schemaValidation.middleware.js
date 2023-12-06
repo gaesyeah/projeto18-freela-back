@@ -1,12 +1,14 @@
+import { error } from "../errors/errors.js";
+
 export const schemaValidation = (schema) => {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     const { body } = req;
 
-    const { error } = schema.validate({ ...body }, { abortEarly: false });
-    if (error)
-      return res
-        .status(422)
-        .send({ message: error.details.map(({ message }) => message) });
+    const result = schema.validate({ ...body }, { abortEarly: false });
+    if (result.error)
+      throw error.unprocessableEntity(
+        result.error.details.map(({ message }) => message).join(", ")
+      );
 
     next();
   };
