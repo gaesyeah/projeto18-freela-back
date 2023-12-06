@@ -15,6 +15,7 @@ Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores d
 - Ter o Node e Postgres instalados
 - Renomear o arquivo .env.example para .env (ou criar um)
 - Rodar os comandos: **npm run start-db** && **npm run dev**
+- Digitar a senha do seu postgres no terminal caso seja requisitado
 
 ## Rotas:
 
