@@ -8,8 +8,6 @@ Este projeto é uma API REST para atender a MiauAuAu, aplicação onde tutores d
 
 **https://freeladb.onrender.com**
 
-**OBS:** Atualmente o deploy do banco está suspenso
-
 ## Como rodar localmente?
 
 - Ter o Node e Postgres instalados
