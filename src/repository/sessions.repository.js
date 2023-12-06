@@ -7,10 +7,10 @@ const insertSession = (token, id) => {
   ]);
 };
 
-const selectName = (token) => {
+const selectNameAndToken = (token) => {
   return db.query(
     `
-    SELECT users.name 
+    SELECT users.name, sessions.token
     FROM sessions 
       JOIN users
       ON users.id = sessions."userId"
@@ -30,7 +30,7 @@ const selectSessionByToken = (token) => {
 
 export const sessionsRepository = {
   insertSession,
-  selectName,
+  selectNameAndToken,
   deleteSessionByToken,
   selectSessionByToken,
 };
