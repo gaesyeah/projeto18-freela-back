@@ -93,9 +93,12 @@ export const selectCatalogueById = (id) => {
   return db.query(
     `
     SELECT 
-      catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, 
+      catalogue.id, catalogue.title, catalogue.description, catalogue.avaliable, catalogue."mainPhotoId", 
       breeds.name AS "breedName",
-      (SELECT photos.url FROM photos WHERE photos.id = catalogue."mainPhotoId") AS "imageUrl",
+      JSON_AGG(JSON_BUILD_OBJECT(
+        'id', photos.id,
+        'url', photos.url
+      )) AS photos,
       JSON_BUILD_OBJECT(
         'name', users.name,
         'cellphone', users.cellphone,
@@ -106,7 +109,10 @@ export const selectCatalogueById = (id) => {
       ON catalogue."breedId" = breeds.id 
       JOIN users 
       ON catalogue."userId" = users.id
+      JOIN photos
+      ON catalogue.id = photos."catalogueId"
     WHERE catalogue.id = $1
+    GROUP BY breeds.id, catalogue.id, users.id
   ;`,
     [id]
   );
