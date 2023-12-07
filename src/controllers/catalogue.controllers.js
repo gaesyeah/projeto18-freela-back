@@ -1,10 +1,11 @@
 import httpStatus from "http-status";
 import { catalogueService } from "../services/catalogue.service.js";
+import { removeBearerFromToken } from "../utils/functions/removeBearerFromToken.js";
 
 const postCatalogue = async (req, res) => {
   await catalogueService.postCatalogue(
     req.body,
-    req.headers.authorization.replace("Bearer ", "")
+    removeBearerFromToken(req.headers.authorization)
   );
   res.sendStatus(httpStatus.CREATED);
 };
@@ -14,8 +15,8 @@ const selectCatalogueByBreedExceptOnesFromTutor = async (req, res) => {
   const { token } = req.query;
   const { rows } =
     await catalogueService.selectCatalogueByBreedExceptOnesFromTutor(
-      parseInt(breedId),
-      token?.replace("Bearer ", "")
+      breedId,
+      removeBearerFromToken(token)
     );
 
   res.send(rows);
@@ -24,14 +25,14 @@ const selectCatalogueByBreedExceptOnesFromTutor = async (req, res) => {
 const getCatalogueByToken = async (req, res) => {
   const { authorization } = req.headers;
   const { rows } = await catalogueService.selectCatalogueByToken(
-    authorization.replace("Bearer ", "")
+    removeBearerFromToken(authorization)
   );
   res.send(rows);
 };
 
 const getCatalogueById = async (req, res) => {
   const { id } = req.params;
-  const { rows } = await catalogueService.selectCatalogueById(parseInt(id));
+  const { rows } = await catalogueService.selectCatalogueById(id);
   res.send(rows[0]);
 };
 
@@ -41,7 +42,7 @@ const patchCatalogueById = async (req, res) => {
 
   await catalogueService.updateCatalogueById(
     id,
-    authorization.replace("Bearer ", "")
+    removeBearerFromToken(authorization)
   );
   res.sendStatus(httpStatus.NO_CONTENT);
 };
