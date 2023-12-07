@@ -10,7 +10,7 @@ const insertSession = (token, id) => {
 const selectNameAndToken = (token) => {
   return db.query(
     `
-    SELECT users.name, sessions.token
+    SELECT users.name, sessions.token, sessions."userId"
     FROM sessions 
       JOIN users
       ON users.id = sessions."userId"

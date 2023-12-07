@@ -1,47 +1,49 @@
 import { db } from "../database/database.js";
 
-export const insertCatalogue = async (body, token) => {
-  const { title, description, breedId, avaliable } = body;
-
-  const { rows } = await db.query(
-    'SELECT sessions."userId" FROM sessions WHERE token = $1;',
-    [token]
-  );
-
-  return db.query(
+const insertCatalogue = async ({
+  client,
+  body: {
+    title,
+    description,
+    breedId,
+    avaliable,
+    photos,
+    mainPhotoPositionFromPhotosArray,
+  },
+  userId,
+}) => {
+  //insert the petModel on the catalogue, returning the id
+  const petModel = await client.query(
     `
     INSERT INTO catalogue (title, description, "breedId", "userId", avaliable, "mainPhotoId") 
     VALUES ($1, $2, $3, $4, $5, $6) 
     RETURNING id
     ;`,
-    [title, description, breedId, rows[0].userId, avaliable, null]
+    [title, description, breedId, userId, avaliable, null]
   );
-};
+  const catalogueId = petModel.rows[0].id;
 
-export const insertPhotos = async (
-  photos,
-  catalogueId,
-  mainPhotoPositionFromPhotosArray
-) => {
+  //create the query and insert the photos related to the petModel
   const values = photos
     .map((_, i) => `($${i + 1}, $${photos.length + 1})`)
     .join(", ");
-  const { rows, rowCount } = await db.query(
+  const { rows } = await client.query(
     `INSERT INTO photos (url, "catalogueId") VALUES ${values} RETURNING id;`,
     [...photos.map(({ url }) => url), catalogueId]
   );
 
+  //update the mainPhoto on the petModel based on the body sent by the user
   const mainPhotoId = rows.some(
     (_, i) => i === mainPhotoPositionFromPhotosArray
   )
     ? rows[mainPhotoPositionFromPhotosArray].id
     : rows[0].id;
-  const update = await db.query(
+  const update = await client.query(
     'UPDATE catalogue SET "mainPhotoId" = $1 WHERE id = $2;',
     [mainPhotoId, catalogueId]
   );
 
-  return { insert: { rows, rowCount }, update: { rowCount: update.rowCount } };
+  return petModel.rows[0];
 };
 
 export const selectCatalogueByBreedNoUser = (breedId, token) => {
@@ -142,3 +144,5 @@ export const updateCatalogueById = async (id, token) => {
     [id]
   );
 };
+
+export const catalogueRepository = { insertCatalogue };

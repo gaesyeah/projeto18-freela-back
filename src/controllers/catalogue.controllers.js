@@ -1,27 +1,17 @@
 import {
-  insertCatalogue,
-  insertPhotos,
   selectCatalogueByBreedNoUser,
   selectCatalogueById,
   selectCatalogueByToken,
   updateCatalogueById,
 } from "../repository/catalogue.repository.js";
+import { catalogueService } from "../services/catalogue.service.js";
 
 export const postCatalogue = async (req, res) => {
-  const { photos } = req.body;
-  const { authorization } = req.headers;
   try {
-    const { rows } = await insertCatalogue(
+    await catalogueService.postCatalogue(
       req.body,
-      authorization.replace("Bearer ", "")
+      req.headers.authorization.replace("Bearer ", "")
     );
-
-    await insertPhotos(
-      photos,
-      rows[0].id,
-      req.body.mainPhotoPositionFromPhotosArray
-    );
-
     res.sendStatus(201);
   } catch ({ code, detail }) {
     if (code === "23503") return res.status(404).send({ message: detail });
