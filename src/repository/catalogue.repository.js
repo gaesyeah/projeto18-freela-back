@@ -98,7 +98,7 @@ export const selectCatalogueById = (id) => {
       JSON_AGG(JSON_BUILD_OBJECT(
         'id', photos.id,
         'url', photos.url
-      )) AS photos,
+      ) ORDER BY photos.id = catalogue."mainPhotoId" DESC ) AS photos,
       JSON_BUILD_OBJECT(
         'name', users.name,
         'cellphone', users.cellphone,
