@@ -81,5 +81,6 @@ ALTER TABLE comments ADD CONSTRAINT comments_fk0 FOREIGN KEY ("userId") REFERENC
 
 INSERT INTO breeds (name, "imageUrl") VALUES ('cachorro', 'https://love.doghero.com.br/wp-content/uploads/2018/12/golden-retriever-1.png');
 INSERT INTO breeds (name, "imageUrl") VALUES ('gato', 'https://static.nationalgeographicbrasil.com/files/styles/image_3200/public/75552.jpg?w=1600&h=1067');
-INSERT INTO breeds (name, "imageUrl") VALUES ('ovelha (cachorro?)', 'https://images.virgula.me/2018/06/cachorro_ovelha_2.jpg');
+INSERT INTO breeds (name, "imageUrl") VALUES ('ovelha', 'https://images.virgula.me/2018/06/cachorro_ovelha_2.jpg');
 INSERT INTO breeds (name, "imageUrl") VALUES ('jacaré', 'https://cdn1.sputniknewsbr.com.br/img/1396/70/13967005_0:19:1024:663_1920x0_80_0_0_a9e89fac5d153369f3bb6a3dbd2a4edc.jpg');
+INSERT INTO breeds (name, "imageUrl") VALUES ('esquilo', 'https://emc.acidadeon.com/dbimagens/mundo_dos__31072021233938.webp');
