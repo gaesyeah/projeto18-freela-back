@@ -6,6 +6,11 @@ export const errorHandling = (error, _req, res, _next) => {
   if (code === "23505")
     return res.status(httpStatus.CONFLICT).send({ message: detail || message });
 
+  if (code === "23503")
+    return res
+      .status(httpStatus.NOT_FOUND)
+      .send({ message: detail || message });
+
   if (status) return res.status(status).send({ message: detail || message });
 
   res

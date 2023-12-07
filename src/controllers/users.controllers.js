@@ -1,19 +1,22 @@
+import httpStatus from "http-status";
 import { sessionsService } from "../services/sessions.service.js";
 import { usersService } from "../services/users.service.js";
 
-export const signUp = async (req, res) => {
+const signUp = async (req, res) => {
   await usersService.insertUsers(req.body);
-  res.sendStatus(201);
+  res.sendStatus(httpStatus.CREATED);
 };
 
-export const signIn = async (req, res) => {
+const signIn = async (req, res) => {
   const { rows } = await sessionsService.insertSessionAndSelectName(req.body);
-  res.status(200).send(rows[0]);
+  res.send(rows[0]);
 };
 
-export const signOut = async (req, res) => {
+const signOut = async (req, res) => {
   await sessionsService.deleteSessionByToken(
     req.headers.authorization.replace("Bearer ", "")
   );
-  res.sendStatus(204);
+  res.sendStatus(httpStatus.NO_CONTENT);
 };
+
+export const usersController = { signIn, signOut, signUp };

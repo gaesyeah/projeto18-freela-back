@@ -1,4 +1,3 @@
-import httpStatus from "http-status";
 import { db } from "../../database/database.js";
 
 export const transactionHandler = async (callback) => {

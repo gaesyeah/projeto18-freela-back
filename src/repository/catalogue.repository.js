@@ -1,19 +1,8 @@
 import { db } from "../database/database.js";
 
-const insertCatalogue = async ({
-  client,
-  body: {
-    title,
-    description,
-    breedId,
-    avaliable,
-    photos,
-    mainPhotoPositionFromPhotosArray,
-  },
-  userId,
-}) => {
-  //insert the petModel on the catalogue, returning the id
-  const petModel = await client.query(
+const insertPetModel = async (client, body, userId) => {
+  const { title, description, breedId, avaliable } = body;
+  const { rows } = await client.query(
     `
     INSERT INTO catalogue (title, description, "breedId", "userId", avaliable, "mainPhotoId") 
     VALUES ($1, $2, $3, $4, $5, $6) 
@@ -21,9 +10,9 @@ const insertCatalogue = async ({
     ;`,
     [title, description, breedId, userId, avaliable, null]
   );
-  const catalogueId = petModel.rows[0].id;
-
-  //create the query and insert the photos related to the petModel
+  return rows[0].id;
+};
+const insertPhotos = async (client, photos, catalogueId) => {
   const values = photos
     .map((_, i) => `($${i + 1}, $${photos.length + 1})`)
     .join(", ");
@@ -31,22 +20,43 @@ const insertCatalogue = async ({
     `INSERT INTO photos (url, "catalogueId") VALUES ${values} RETURNING id;`,
     [...photos.map(({ url }) => url), catalogueId]
   );
-
-  //update the mainPhoto on the petModel based on the body sent by the user
-  const mainPhotoId = rows.some(
+  return rows;
+};
+const updateMainPhoto = (
+  client,
+  mainPhotoPositionFromPhotosArray,
+  insertedPhotos,
+  catalogueId
+) => {
+  const mainPhotoId = insertedPhotos.some(
     (_, i) => i === mainPhotoPositionFromPhotosArray
   )
-    ? rows[mainPhotoPositionFromPhotosArray].id
-    : rows[0].id;
-  const update = await client.query(
+    ? insertedPhotos[mainPhotoPositionFromPhotosArray].id
+    : insertedPhotos[0].id;
+  return client.query(
     'UPDATE catalogue SET "mainPhotoId" = $1 WHERE id = $2;',
     [mainPhotoId, catalogueId]
   );
+};
+const insertCatalogue = async ({ client, body, userId }) => {
+  //insert the petModel on the catalogue, returning the id
+  const catalogueId = await insertPetModel(client, body, userId);
 
-  return petModel.rows[0];
+  //create the query and insert the photos related to the petModel
+  const insertedPhotos = await insertPhotos(client, body.photos, catalogueId);
+
+  //update the mainPhoto on the petModel based on the body sent by the user
+  await updateMainPhoto(
+    client,
+    body.mainPhotoPositionFromPhotosArray,
+    insertedPhotos,
+    catalogueId
+  );
+
+  return;
 };
 
-export const selectCatalogueByBreedNoUser = (breedId, token) => {
+const selectCatalogueByBreedExceptOnesFromTutor = (breedId, token) => {
   return db.query(
     `SELECT 
       catalogue.id, catalogue.title, catalogue.avaliable, 
@@ -70,7 +80,7 @@ export const selectCatalogueByBreedNoUser = (breedId, token) => {
   );
 };
 
-export const selectCatalogueByToken = (token) => {
+const selectCatalogueByToken = (token) => {
   return db.query(
     `
     SELECT 
@@ -91,7 +101,7 @@ export const selectCatalogueByToken = (token) => {
   );
 };
 
-export const selectCatalogueById = (id) => {
+const selectCatalogueById = (id) => {
   return db.query(
     `
     SELECT 
@@ -120,8 +130,8 @@ export const selectCatalogueById = (id) => {
   );
 };
 
-export const updateCatalogueById = async (id, token) => {
-  const { rowCount } = await db.query(
+const checkCatalogueById = (id, token) => {
+  return db.query(
     `
     SELECT *
     FROM catalogue
@@ -129,8 +139,8 @@ export const updateCatalogueById = async (id, token) => {
   ;`,
     [id, token]
   );
-  if (rowCount === 0) return { rowCount };
-
+};
+const updateCatalogueById = (id) => {
   return db.query(
     `
     UPDATE catalogue
@@ -145,4 +155,11 @@ export const updateCatalogueById = async (id, token) => {
   );
 };
 
-export const catalogueRepository = { insertCatalogue };
+export const catalogueRepository = {
+  insertCatalogue,
+  selectCatalogueByBreedExceptOnesFromTutor,
+  selectCatalogueByToken,
+  selectCatalogueById,
+  checkCatalogueById,
+  updateCatalogueById,
+};

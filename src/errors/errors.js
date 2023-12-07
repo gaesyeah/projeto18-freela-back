@@ -14,4 +14,11 @@ const unauthorized = (resource = "Unauthorized") => {
   };
 };
 
-export const error = { unprocessableEntity, unauthorized };
+const notFound = (resource = "Not found") => {
+  return {
+    status: httpStatus.NOT_FOUND,
+    message: resource,
+  };
+};
+
+export const error = { unprocessableEntity, unauthorized, notFound };

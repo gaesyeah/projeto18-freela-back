@@ -1,11 +1,14 @@
+import httpStatus from "http-status";
 import { breedsService } from "../services/breeds.service.js";
 
-export const postBreed = async (req, res) => {
+const postBreed = async (req, res) => {
   await breedsService.insertBreeds(req.body);
-  res.sendStatus(201);
+  res.sendStatus(httpStatus.CREATED);
 };
 
-export const getBreeds = async (_req, res) => {
+const getBreeds = async (_req, res) => {
   const { rows } = await breedsService.selectBreeds();
   res.send(rows);
 };
+
+export const breedsController = { postBreed, getBreeds };
